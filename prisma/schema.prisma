@@ -1,0 +1,77 @@
+// This is your Prisma schema file
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+  deals     Deal[]
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  position  String?
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  deals     Deal[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id        String    @id @default(uuid())
+  name      String
+  industry  String?
+  website   String?
+  size      String?
+  contacts  Contact[]
+  deals     Deal[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Deal {
+  id           String    @id @default(uuid())
+  title        String
+  value        Float
+  stage        String
+  probability  Int
+  closeDate    DateTime?
+  companyId    String?
+  company      Company?  @relation(fields: [companyId], references: [id])
+  contactId    String?
+  contact      Contact?  @relation(fields: [contactId], references: [id])
+  ownerId      String
+  owner        User      @relation(fields: [ownerId], references: [id])
+  description  String?   @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String
+  description String?   @db.Text
+  status      String    @default("todo")
+  priority    String    @default("medium")
+  dueDate     DateTime?
+  assignedTo  String?
+  user        User?     @relation(fields: [assignedTo], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
