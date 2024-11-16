@@ -1,35 +1,12 @@
 /// <reference types="vite/client" />
 
-declare module 'react-email-editor' {
-  import { ComponentType } from 'react';
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string;
+  readonly VITE_AUTH0_DOMAIN: string;
+  readonly VITE_AUTH0_CLIENT_ID: string;
+  readonly VITE_STRIPE_PUBLIC_KEY: string;
+}
 
-  interface EmailEditorProps {
-    ref?: any;
-    onReady?: () => void;
-    minHeight?: string | number;
-    options?: {
-      customCSS?: string[];
-      features?: {
-        colorPicker?: {
-          presets?: string[];
-        };
-      };
-      tools?: {
-        [key: string]: {
-          enabled: boolean;
-        };
-      };
-      appearance?: {
-        theme?: 'light' | 'dark';
-        panels?: {
-          tools?: {
-            dock?: 'left' | 'right';
-          };
-        };
-      };
-    };
-  }
-
-  const EmailEditor: ComponentType<EmailEditorProps>;
-  export default EmailEditor;
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 }
